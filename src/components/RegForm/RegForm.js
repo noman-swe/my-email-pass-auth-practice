@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form } from 'react-bootstrap';
 import app from '../../firebase.init';
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { Link } from 'react-router-dom';
 
 const auth = getAuth(app);
 
@@ -115,51 +116,56 @@ const RegForm = () => {
 
 
     return (
-        <div className='login-registration w-50 border p-3 mx-auto mt-5'>
-            <h2 className="text-primary"> {registered ? 'Log in' : 'Registration'}</h2>
-            <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-                {!registered &&
-                    <Form.Group className="mb-3" controlId="formBasicName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control onBlur={handleNameBlur} type="Name" placeholder="Enter name" required />
+        <div className=''>
+            <div className='login-registration w-50 border p-3 mx-auto mt-5'>
+                <h2 className="text-primary"> {registered ? 'Log in' : 'Registration'}</h2>
+                <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+                    {!registered &&
+                        <Form.Group className="mb-3" controlId="formBasicName">
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control onBlur={handleNameBlur} type="Name" placeholder="Enter name" required />
 
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid name.
+                            </Form.Control.Feedback>
+                        </Form.Group>}
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control onBlur={handleEmailBlur} type="email" placeholder="Enter email" required />
+                        <Form.Text className="text-muted">
+                            We'll never share your email with anyone else.
+                        </Form.Text>
                         <Form.Control.Feedback type="invalid">
-                            Please provide a valid name.
+                            Please provide a valid email.
                         </Form.Control.Feedback>
-                    </Form.Group>}
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control onBlur={handleEmailBlur} type="email" placeholder="Enter email" required />
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a valid email.
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control onBlur={handlePassBlur} type="password" placeholder="Password" autoComplete='on' required />
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a valid password.
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control onBlur={handlePassBlur} type="password" placeholder="Password" autoComplete='on' required />
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a valid password.
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <span className='text-danger'>{error}</span> <br />
+                    <p className='text-success'>{success}</p>
 
-                <span className='text-danger'>{error}</span> <br />
-                <p className='text-success'>{success}</p>
+                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                        <Form.Check onChange={hanhleCheck} type="checkbox" label="Check me out" />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check onChange={hanhleCheck} type="checkbox" label="Check me out" />
-                </Form.Group>
+                    <Button onClick={forgetPasswordReset} variant="link">Forget Password?</Button> <br />
 
-                <Button onClick={forgetPasswordReset} variant="link">Forget Password?</Button> <br />
-
-                <Button variant="primary" className='mt-2' type="submit">
-                    {registered ? "Log in" : 'Registration'}
-                </Button>
-            </Form>
+                    <Button variant="primary" className='mt-2' type="submit">
+                        {registered ? "Log in" : 'Registration'}
+                    </Button>
+                </Form>
+            </div>
+            <div className="back-button w-50 d-flex mx-auto justify-content-end">
+                <Button variant="link" className='mr-5'><Link to={'/'}>back</Link></Button>
+            </div>
         </div>
     );
 };
