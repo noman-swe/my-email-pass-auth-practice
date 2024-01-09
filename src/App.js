@@ -3,6 +3,7 @@ import './App.css';
 // import RegForm from './components/RegForm/RegForm';
 import SignInOptions from './components/SignInOptions/SignInOptions';
 import RegForm from './components/RegForm/RegForm';
+import Main from './components/Main/Main';
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       <Routes>
         <Route path={'/'} element={<SignInOptions></SignInOptions>}></Route>
         <Route path={'/emailPassword'} element={<RegForm></RegForm>}>Email Password</Route>
-        
+        <Route path={'/main'} element={<Main></Main>}></Route>
+
       </Routes>
     </div>
   );
