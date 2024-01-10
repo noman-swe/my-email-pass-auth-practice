@@ -3,7 +3,7 @@ import { Badge, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 // import viaGoogleAccount from '../../utilities/googleAuth';
-import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 import { useState } from "react";
 import app from '../../firebase.init';
 
@@ -11,18 +11,33 @@ import app from '../../firebase.init';
 
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
 const SignInOptions = () => {
 
     const [user, setUser] = useState('');
+    const [success, setSuccess] = useState(false);
+    setSuccess(false);
 
+    // via google auth
     const viaGoogleAccount = () => {
         signInWithPopup(auth, googleProvider)
             .then(result => {
                 const user = result.user;
                 setUser(user);
+                setSuccess(true);
             })
             .catch(error => { console.log(error) })
+    }
+
+
+    // via github
+    const viaGithubAccount = () => {
+        signInWithPopup(auth, githubProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+            })
     }
 
     // sign-out
@@ -34,6 +49,9 @@ const SignInOptions = () => {
             })
             .catch(error => { console.error(error) })
     }
+
+
+
 
 
     return (
@@ -51,12 +69,12 @@ const SignInOptions = () => {
 
                 </Badge>
 
-                <Badge bg="danger p-2 m-3 text-white text-wrap" style={{ 'cursor': 'pointer' }}>via Github Authentication
+                <Badge onClick={viaGithubAccount} bg="danger p-2 m-3 text-white text-wrap" style={{ 'cursor': 'pointer' }}>via Github Authentication
 
                 </Badge>
 
-                {/*  */}
-                <div className="result w-50 mx-auto">
+
+                {success && <div className="result w-50 mx-auto">
                     <div className="user-info" style={{ 'border': '1px solid gray', 'padding': '20px', 'width': '600px' }}>
                         <img src={user.photoURL} alt="" />
                         <h2>Name : {user.displayName}</h2>
@@ -65,8 +83,9 @@ const SignInOptions = () => {
                             <Button variant="link" onClick={googleSignOut} className='mr-5'>log-out</Button>
                         </div>
                     </div>
-                    {/*  */}
+
                 </div>
+                }
             </div>
         </div>
     );
