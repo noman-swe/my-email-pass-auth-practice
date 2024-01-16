@@ -110,7 +110,7 @@ const RegForm = () => {
         updateProfile(auth.currentUser, {
             displayName: name
         })
-            .then(() => { console.log('updating Name.') })
+            .then(() => { console.log('Updating Name.') })
             .catch((error) => setError(error))
     }
 
