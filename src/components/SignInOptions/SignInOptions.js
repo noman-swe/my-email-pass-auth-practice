@@ -3,7 +3,7 @@ import { Badge, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 // import viaGoogleAccount from '../../utilities/googleAuth';
-import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, sendEmailVerification, signInWithPopup, signOut } from "firebase/auth";
 import { useState } from "react";
 import app from '../../firebase.init';
 
@@ -17,7 +17,13 @@ const SignInOptions = () => {
 
     const [user, setUser] = useState('');
     const [success, setSuccess] = useState(false);
-    setSuccess(false);
+    const [verify, setVerify] = useState('');
+
+    const emaiVerify = () => {
+        sendEmailVerification(auth.currentUser)
+            .then(() => { })
+            .catch(error => { console.error(error) })
+    }
 
     // via google auth
     const viaGoogleAccount = () => {
@@ -26,6 +32,9 @@ const SignInOptions = () => {
                 const user = result.user;
                 setUser(user);
                 setSuccess(true);
+                emaiVerify();
+                setVerify('Verification mail sent to your account.');
+
             })
             .catch(error => { console.log(error) })
     }
@@ -38,14 +47,16 @@ const SignInOptions = () => {
                 const user = result.user;
                 console.log(user);
             })
+            .then((error) => {console.error(error)})
     }
 
     // sign-out
     const googleSignOut = () => {
         signOut(auth)
             .then(() => {
-                console.log('sign-out');
                 setUser({});
+                setSuccess(false);
+                setVerify('');
             })
             .catch(error => { console.error(error) })
     }
@@ -66,12 +77,12 @@ const SignInOptions = () => {
 
                 <Badge onClick={viaGoogleAccount} bg="success p-2 m-3 text-white text-wrap" style={{ 'cursor': 'pointer' }}>via Google Authentication
                     <Link to={'/main'}></Link>
-
                 </Badge>
 
                 <Badge onClick={viaGithubAccount} bg="danger p-2 m-3 text-white text-wrap" style={{ 'cursor': 'pointer' }}>via Github Authentication
 
                 </Badge>
+                <p className='bg-warning'>{verify}</p>
 
 
                 {success && <div className="result w-50 mx-auto">
